@@ -1,15 +1,11 @@
-from turtle import ondrag
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-
 class User(AbstractUser):
-    username = AbstractUser.username(maxlength = 10)
-    password = AbstractUser.password(maxlength = 15)
-    joined = AbstractUser.date_joined()
-
+    pass
 
 class Auc_listing(models.Model):
+    user = models.ManyToManyField(User, blank=True, related_name="auctions")
     name = models.CharField(max_length=20)
     starting_bid = models.IntegerField()
     img_url = models.URLField(max_length=200)
@@ -18,15 +14,15 @@ class Auc_listing(models.Model):
     time = models.TimeField()
     date = models.DateField
     status = models.BooleanField()
-    bids = models.ForeignKey(bids, on_delete = models.CASCADE)
-    comments = models.ForeignKey(comments, on_delete = models.CASCADE)
-
 
 class bids(models.Model):
+    user = models.ManyToManyField(User, blank=True, related_name="bids")
+    auction = models.ManyToManyField(Auc_listing, blank=True, related_name="bids")
     amount = models.IntegerField()
-    time = models.Model()
-
+    time = models.TimeField()
 
 class comments(models.Model):
+    user = models.ManyToManyField(User, blank=True, related_name="comments")
+    auction = models.ManyToManyField(Auc_listing, blank=True, related_name="comments")
     content = models.CharField(max_length=50)
     upvotes = models.IntegerField()
