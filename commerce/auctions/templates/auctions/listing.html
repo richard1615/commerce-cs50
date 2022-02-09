@@ -2,18 +2,27 @@
 
 
 {% block body %}
-    <h1>{{ item.name }}</h1>
-    {{ item.starting_bid }}
-    {{ item.img_url }}
-    {{ item.category }}
-    {{ item.desc }}
-
-    <a href="#">Add to watchlist</a>
+<div class="box2">
+    <h3>Listing: {{ item.name }}</h3>
+    <img src="{{ item.img_url }}" alt="Image">
+    <span>Price: ${{ item.starting_bid }}</span>
+    <div>
+        Category:{{ item.category }}
+        Desc:{{ item.desc }}
+    </div>
+    <a href="{% url 'add_to_watchlist' item.name %}">Add to watchlist</a>
+</div>
+    <form action="{% url 'add_bid' item.name %}" method = "POST">
+        {% csrf_token %}
+        {{ bid_form }}
+        <input type="submit" value = "Place Bid">
+    </form>
 
     <h2>Comments</h2>
     <form action="{% url 'listing' item.name %}" method = "post">
         {% csrf_token %}
         {{ comment_form }}
+        <input type="submit" value = "Post comment">
     </form>
     {% if comment_list %}
         {% for comment in comment_list %}

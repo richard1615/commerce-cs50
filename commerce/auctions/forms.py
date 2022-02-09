@@ -13,3 +13,8 @@ class comment_form(ModelForm):
     class Meta:
         model = comments
         fields = ['content']
+
+class bid_form(ModelForm):
+    class Meta:
+        model = bids
+        fields = ['amount']

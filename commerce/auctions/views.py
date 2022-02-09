@@ -2,13 +2,13 @@ from tracemalloc import start
 from unicodedata import category
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from datetime import datetime
 
-
-from .models import User, Auc_listing, comments
-from .forms import listingForm, comment_form
+from .models import User, Auc_listing, comments, bids, Watchlist
+from .forms import bid_form, listingForm, comment_form
 
 def index(request):
     listings = Auc_listing.objects.all()
@@ -91,11 +91,34 @@ def listing(request, lname):
         user = request.user
         auction = item = Auc_listing.objects.filter(name = lname)[0]
         comments.objects.create(user = user, auction = auction, content = content)
+    bids = bid_form()
     item = Auc_listing.objects.filter(name = lname)[0]
     comment = comment_form()
     comment_list = comments.objects.filter(auction = item)
     return render(request, 'auctions/listing.html', {
         'item' : item,
         'comment_form' : comment,
-        'comment_list' : comment_list
+        'comment_list' : comment_list,
+        'bid_form': bids
+        })
+
+def add_bid(request, lname):
+    bid = request.POST['amount']
+    user = request.user
+    auction = Auc_listing.objects.filter(name = lname)[0]
+    time = datetime.now()
+    bids.objects.create(user = user, auction = auction, amount = bid, time = time)
+    return HttpResponseRedirect(reverse("listing", args=[lname]))
+
+def add_to_watchlist(request, lname):
+    user = request.user
+    auction = Auc_listing.objects.filter(name = lname)[0]
+    Watchlist.objects.create(user = user, auction = auction)
+    return HttpResponseRedirect(reverse("listing", args=[lname]))
+
+
+def view_watchlist(request):
+    items = Watchlist.objects.filter(user = request.user)
+    return render(request, "auctions/watchlist.html", {
+        'items' : items
     })

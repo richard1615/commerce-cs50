@@ -16,8 +16,8 @@ class Auc_listing(models.Model):
     #status = models.BooleanField()
 
 class bids(models.Model):
-    user = models.ManyToManyField(User, blank=True, related_name="bids")
-    auction = models.ManyToManyField(Auc_listing, blank=True, related_name="bids")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    auction = models.ForeignKey(Auc_listing, on_delete=models.CASCADE)
     amount = models.IntegerField()
     time = models.TimeField()
 
@@ -26,3 +26,7 @@ class comments(models.Model):
     auction = models.ForeignKey(Auc_listing, on_delete = models.CASCADE)
     content = models.CharField(max_length=50)
     upvotes = models.IntegerField(default=0)
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    auction = models.ForeignKey(Auc_listing, on_delete = models.CASCADE)
