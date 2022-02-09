@@ -4,8 +4,15 @@
     <h2>Active Listings</h2>
 
     {% for listing in listings %}
-        {{ listing.name }}
-        {{ listing.category }}
-        {{ listing.desc }}
+    <div class="box">
+        <div class = "img-responsive">
+            <img href="{{ listing.img_url }}" alt="{{ listing.name }}">
+        </div>
+        <div class="content">
+            <h5><a href="{% url 'listing' listing.name %}">{{ listing.name }}</a></h5>
+            <span><strong>Price: </strong>${{ listing.category }}</span>
+            <span>{{ listing.desc }}</span>
+        </div>
+    </div>
     {% endfor %}
 {% endblock %}

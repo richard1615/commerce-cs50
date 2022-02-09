@@ -8,3 +8,8 @@ class listingForm(ModelForm):
     class Meta:
         model = Auc_listing
         fields = ['name', 'starting_bid', 'img_url', 'category', 'desc']
+
+class comment_form(ModelForm):
+    class Meta:
+        model = comments
+        fields = ['content']

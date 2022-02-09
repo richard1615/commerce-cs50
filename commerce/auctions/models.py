@@ -22,7 +22,7 @@ class bids(models.Model):
     time = models.TimeField()
 
 class comments(models.Model):
-    user = models.ManyToManyField(User, blank=True, related_name="comments")
-    auction = models.ManyToManyField(Auc_listing, blank=True, related_name="comments")
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    auction = models.ForeignKey(Auc_listing, on_delete = models.CASCADE)
     content = models.CharField(max_length=50)
-    upvotes = models.IntegerField()
+    upvotes = models.IntegerField(default=0)

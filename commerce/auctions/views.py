@@ -7,8 +7,8 @@ from django.shortcuts import render
 from django.urls import reverse
 
 
-from .models import User, Auc_listing
-from .forms import listingForm
+from .models import User, Auc_listing, comments
+from .forms import listingForm, comment_form
 
 def index(request):
     listings = Auc_listing.objects.all()
@@ -86,7 +86,16 @@ def create_listing(request):
     })
 
 def listing(request, lname):
+    if request.method == 'POST':
+        content = request.POST['content']
+        user = request.user
+        auction = item = Auc_listing.objects.filter(name = lname)[0]
+        comments.objects.create(user = user, auction = auction, content = content)
     item = Auc_listing.objects.filter(name = lname)[0]
+    comment = comment_form()
+    comment_list = comments.objects.filter(auction = item)
     return render(request, 'auctions/listing.html', {
-        'item' : item
+        'item' : item,
+        'comment_form' : comment,
+        'comment_list' : comment_list
     })

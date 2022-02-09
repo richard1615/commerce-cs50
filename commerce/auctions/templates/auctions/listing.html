@@ -1,9 +1,28 @@
 {% extends "auctions/layout.html" %}
 
+
 {% block body %}
     <h1>{{ item.name }}</h1>
     {{ item.starting_bid }}
     {{ item.img_url }}
     {{ item.category }}
     {{ item.desc }}
+
+    <a href="#">Add to watchlist</a>
+
+    <h2>Comments</h2>
+    <form action="{% url 'listing' item.name %}" method = "post">
+        {% csrf_token %}
+        {{ comment_form }}
+    </form>
+    {% if comment_list %}
+        {% for comment in comment_list %}
+        <div class="box">
+            {{ comment.content }}
+        </div>
+        {% endfor %}
+        {% else %}
+        No comments yet
+    {% endif %}
+    
 {% endblock %}
