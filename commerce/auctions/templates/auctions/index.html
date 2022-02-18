@@ -4,15 +4,17 @@
     <h2>Active Listings</h2>
 
     {% for listing in listings %}
-    <div class="box">
-        <div class = "img-responsive">
-            <img href="{{ listing.img_url }}" alt="{{ listing.name }}">
+    {% if listing.status == True %}
+        <div class="box">
+            <div class = "img-responsive">
+                <img href="{{ listing.img_url }}" alt="{{ listing.name }}">
+            </div>
+            <div class="content">
+                <h5><a href="{% url 'listing' listing.name %}">{{ listing.name }}</a></h5>
+                <span><strong>Price: </strong>${{ listing.starting_bid }}</span>
+                <span>{{ listing.desc }}</span>
+            </div>
         </div>
-        <div class="content">
-            <h5><a href="{% url 'listing' listing.name %}">{{ listing.name }}</a></h5>
-            <span><strong>Price: </strong>${{ listing.category }}</span>
-            <span>{{ listing.desc }}</span>
-        </div>
-    </div>
+    {% endif %}
     {% endfor %}
 {% endblock %}

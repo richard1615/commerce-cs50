@@ -5,33 +5,66 @@
 <div class="box2">
     <h3>Listing: {{ item.name }}</h3>
     <img src="{{ item.img_url }}" alt="Image">
-    <span>Price: ${{ item.starting_bid }}</span>
+    <span>Price: ${{ highest }}</span>
+    <span>There are currently {{ count }} bid(s)</span>
     <div>
         Category:{{ item.category }}
         Desc:{{ item.desc }}
-    </div>
-    <a href="{% url 'add_to_watchlist' item.name %}">Add to watchlist</a>
+    </div>    
 </div>
-    <form action="{% url 'add_bid' item.name %}" method = "POST">
-        {% csrf_token %}
-        {{ bid_form }}
-        <input type="submit" value = "Place Bid">
-    </form>
+    
+    {% if user.is_authenticated %}
+        {% if if_current %}
+
+            <form action="{% url 'close_auction' item.name %}">
+                <input type="submit" value = "Close Auction">
+            </form>
+
+        {% else %}
+
+            <form action="{% url 'add_bid' item.name %}" method = "POST">
+                {% csrf_token %}
+                {{ bid_form }}
+                <input type="submit" value = "Place Bid">
+            </form>
+
+        {% endif %}
+
+        <form action="{% url 'listing' item.name %}" method = "post">
+            {% csrf_token %}
+            {{ comment_form }}
+            <input type="submit" value = "Post comment">
+        </form>
+
+        <a href="{% url 'add_to_watchlist' item.name %}">Add to watchlist</a>
+
+    {% else %}
+
+        <div>
+            <a href="{% url 'login' %}">Login to bid</a>
+        </div>
+
+        <div>
+            <a href="{% url 'login' %}">Login to post comments</a>
+        </div>
+
+    {% endif %}
+
 
     <h2>Comments</h2>
-    <form action="{% url 'listing' item.name %}" method = "post">
-        {% csrf_token %}
-        {{ comment_form }}
-        <input type="submit" value = "Post comment">
-    </form>
     {% if comment_list %}
+
         {% for comment in comment_list %}
+
         <div class="box">
             {{ comment.content }}
         </div>
+
         {% endfor %}
+
         {% else %}
         No comments yet
+
     {% endif %}
     
 {% endblock %}
